@@ -20,23 +20,25 @@ const ColorPicker: React.FC<Props> = ({ color, onChange, lang }) => {
     '#f59e0b', // Amber
     '#0f172a', // Slate
     '#7c2d12', // Warm Orange
+    '#be185d', // Pink
+    '#1e40af', // Deep Blue
   ];
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 no-print space-y-4">
-      <div className="flex items-center gap-3 mb-2">
-         <span className="text-xl">🎨</span>
-         <h3 className="font-black text-slate-800 text-sm uppercase tracking-wide">{t.themeColor}</h3>
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 px-1">
+         <div className="w-6 h-6 rounded bg-rose-100 text-rose-600 flex items-center justify-center text-xs">🎨</div>
+         <h3 className="font-black text-slate-800 text-[10px] uppercase tracking-wider">{t.themeColor}</h3>
       </div>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-2.5 px-1">
         {colors.map((c) => (
           <button
             key={c}
             onClick={() => onChange(c)}
-            className={`w-10 h-10 rounded-full transition-all duration-300 border-4 ${
+            className={`w-7 h-7 rounded-full transition-all duration-300 border-2 ${
               color === c ? 'border-white scale-125 shadow-lg' : 'border-transparent hover:scale-110'
             }`}
-            style={{ backgroundColor: c, boxShadow: color === c ? `0 0 15px ${c}55` : 'none' }}
+            style={{ backgroundColor: c, boxShadow: color === c ? `0 0 10px ${c}66` : 'none' }}
           />
         ))}
       </div>
