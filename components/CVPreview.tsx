@@ -7,9 +7,10 @@ interface Props {
   lang: Language;
   template: TemplateType;
   themeColor: string;
+  fontFamily: string;
 }
 
-const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
+const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFamily }) => {
   const isRtl = lang === 'ar';
 
   const SectionTitle = ({ children, icon, light = false }: { children: React.ReactNode, icon?: string, light?: boolean }) => (
@@ -22,9 +23,12 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
     </div>
   );
 
+  // Styles applied to the template container
+  const containerStyle = { fontFamily: fontFamily };
+
   // 1. MODERN: Clean, Minimalist, Vertical Spacing
   const renderModern = () => (
-    <div className="flex flex-col h-full bg-white text-slate-800">
+    <div className="flex flex-col h-full bg-white text-slate-800" style={containerStyle}>
       <header className="p-16 border-b-8" style={{ borderColor: themeColor }}>
         <div className="flex items-center gap-12">
           {data.personalInfo.image && <img src={data.personalInfo.image} className="w-40 h-40 rounded-3xl object-cover shadow-2xl border-4 border-slate-50" />}
@@ -80,7 +84,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
 
   // 2. EXECUTIVE: Corporate, High-Contrast
   const renderExecutive = () => (
-    <div className="flex h-full bg-white min-h-[1123px]">
+    <div className="flex h-full bg-white min-h-[1123px]" style={containerStyle}>
       <aside className="w-80 bg-slate-900 text-white p-12 space-y-12">
         {data.personalInfo.image && <img src={data.personalInfo.image} className="w-full aspect-square rounded-[3rem] object-cover border-4 border-white/10 shadow-2xl mb-8" />}
         <section>
@@ -127,7 +131,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
 
   // 3. CREATIVE: Modern Grid, Dynamic Layout
   const renderCreative = () => (
-    <div className="bg-slate-50 h-full p-12">
+    <div className="bg-slate-50 h-full p-12" style={containerStyle}>
       <div className="bg-white rounded-[4rem] shadow-2xl overflow-hidden h-full flex flex-col">
         <header className="p-16 flex justify-between items-start" style={{ backgroundColor: themeColor }}>
            <div className="text-white max-w-2xl">
@@ -169,7 +173,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
 
   // 4. GEOMETRIC: Solid blocks and sharp borders
   const renderGeometric = () => (
-    <div className="bg-white h-full border-[20px] border-slate-100 flex flex-col">
+    <div className="bg-white h-full border-[20px] border-slate-100 flex flex-col" style={containerStyle}>
        <div className="flex border-b-[20px] border-slate-100 h-64">
           <div className="w-64 h-full bg-slate-900 flex items-center justify-center">
              {data.personalInfo.image ? <img src={data.personalInfo.image} className="w-full h-full object-cover grayscale" /> : <div className="text-white text-6xl font-black">CV</div>}
@@ -213,7 +217,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
 
   // 5. SIDEBAR: Classic Two-Column Split
   const renderSidebar = () => (
-    <div className={`flex h-full ${isRtl ? 'flex-row' : 'flex-row-reverse'} bg-white`}>
+    <div className={`flex h-full ${isRtl ? 'flex-row' : 'flex-row-reverse'} bg-white`} style={containerStyle}>
        <main className="flex-1 p-16">
           <header className="mb-12">
              <h1 className="text-5xl font-black text-slate-900">{data.personalInfo.fullName}</h1>
@@ -260,7 +264,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor }) => {
 
   // 6. PROFESSIONAL: Standard, Clean, High Readability
   const renderProfessional = () => (
-    <div className="bg-white h-full p-16 text-slate-900">
+    <div className="bg-white h-full p-16 text-slate-900" style={containerStyle}>
        <header className="text-center mb-12 border-b-2 pb-12" style={{ borderColor: themeColor }}>
           <h1 className="text-4xl font-black mb-2">{data.personalInfo.fullName}</h1>
           <p className="text-lg font-bold opacity-60 mb-6 uppercase tracking-[0.2em]">{data.personalInfo.jobTitle}</p>

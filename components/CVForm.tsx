@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { CVData, Language } from '../types';
 import { translations } from '../translations';
-import { enhanceSummary } from '../services/geminiService';
 
 interface Props {
   data: CVData;
@@ -34,12 +33,6 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
     }
   };
 
-  const handleAIEnhance = async () => {
-    if (!data.personalInfo.summary) return;
-    const enhanced = await enhanceSummary(data.personalInfo.summary, lang);
-    updatePersonalInfo('summary', enhanced);
-  };
-
   // Section Handlers
   const addExperience = () => {
     setData(prev => ({
@@ -60,7 +53,7 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
   };
 
   const removeEducation = (id: string) => {
-    setData(prev => ({ ...prev, education: prev.education.filter(e => e.id !== id) }));
+    setData(prev => ({ ...prev, education: prev.education.filter(edu => edu.id !== id) }));
   };
 
   const addSkill = () => {
@@ -152,12 +145,6 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
               <div className="col-span-full space-y-2">
                 <div className="flex justify-between items-center px-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">{t.summary}</label>
-                  <button 
-                    onClick={handleAIEnhance}
-                    className="text-[10px] bg-indigo-600 text-white px-3 py-1 rounded-full font-bold hover:bg-indigo-700 transition-colors flex items-center gap-1 shadow-sm"
-                  >
-                    ✨ {t.aiEnhance}
-                  </button>
                 </div>
                 <textarea 
                   rows={4}
@@ -207,7 +194,7 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
                       rows={3}
                       className="w-full p-3 bg-white border border-gray-200 rounded-xl outline-none text-sm"
                       value={exp.description}
-                      onChange={(e) => {
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                         const newList = [...data.experience];
                         newList[index].description = e.target.value;
                         setData({ ...data, experience: newList });

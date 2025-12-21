@@ -8,13 +8,14 @@ import CVPreview from './components/CVPreview';
 import TemplateSelector from './components/TemplateSelector';
 import SpecialtySelector from './components/SpecialtySelector';
 import ColorPicker from './components/ColorPicker';
+import FontSelector from './components/FontSelector';
 import * as htmlToImage from 'html-to-image';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [template, setTemplate] = useState<TemplateType>('modern');
   const [themeColor, setThemeColor] = useState<string>('#4f46e5');
-  // Initialize with sample data directly instead of empty data
+  const [fontFamily, setFontFamily] = useState<string>('Cairo');
   const [data, setData] = useState<CVData>(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
   const [isCapturing, setIsCapturing] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -27,6 +28,10 @@ const App: React.FC = () => {
     
     // Switch data if language changes and data is still one of the defaults
     setData(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
+    
+    // Auto-switch default font based on language
+    if (lang === 'ar') setFontFamily('Cairo');
+    else setFontFamily('Inter');
   }, [lang]);
 
   const toggleLanguage = () => {
@@ -76,7 +81,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-slate-50/50 pb-20 transition-colors ${lang === 'ar' ? 'font-tajawal' : 'font-inter'}`}>
+    <div className={`min-h-screen bg-slate-50/50 pb-20 transition-colors ${lang === 'ar' ? 'font-cairo' : 'font-inter'}`} style={{ fontFamily: fontFamily }}>
       {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/50 px-6 py-4 no-print shadow-sm">
         <div className="max-w-[1400px] mx-auto flex justify-between items-center">
@@ -131,10 +136,10 @@ const App: React.FC = () => {
                  <h2 className="text-2xl font-black text-slate-900">صمّم هويتك المهنية</h2>
                  <p className="text-slate-500 text-sm font-medium">تحكم بالألوان، القوالب، والبيانات لخلق انطباع لا ينسى.</p>
               </div>
-              {/* Removed Fill Sample Button as requested */}
             </div>
             
             <ColorPicker color={themeColor} onChange={setThemeColor} lang={lang} />
+            <FontSelector currentFont={fontFamily} onChange={setFontFamily} lang={lang} />
             <SpecialtySelector lang={lang} onSelect={handleSpecialtySelect} themeColor={themeColor} />
             <TemplateSelector current={template} onChange={setTemplate} lang={lang} />
             <CVForm data={data} setData={setData} lang={lang} />
@@ -148,7 +153,13 @@ const App: React.FC = () => {
                    className="absolute -inset-10 rounded-[4rem] blur-3xl opacity-20 transition-all duration-1000"
                    style={{ backgroundColor: themeColor }}
                  ></div>
-                 <CVPreview data={data} lang={lang} template={template} themeColor={themeColor} />
+                 <CVPreview 
+                    data={data} 
+                    lang={lang} 
+                    template={template} 
+                    themeColor={themeColor} 
+                    fontFamily={fontFamily}
+                 />
                </div>
             </div>
           </div>
