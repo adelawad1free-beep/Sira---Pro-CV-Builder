@@ -1,0 +1,7 @@
+{
+  "name": "Sira - Pro CV Builder",
+  "description": "The most professional Arabic and English CV builder. Create stunning, SEO-optimized resumes in minutes with AI assistance and high-quality templates.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
