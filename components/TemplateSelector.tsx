@@ -11,29 +11,36 @@ interface Props {
 
 const TemplateSelector: React.FC<Props> = ({ current, onChange, lang }) => {
   const t = translations[lang];
-  const templates: { id: TemplateType; label: string; color: string }[] = [
-    { id: 'modern', label: t.modern, color: 'bg-indigo-600' },
-    { id: 'classic', label: t.classic, color: 'bg-gray-800' },
-    { id: 'minimal', label: t.minimal, color: 'bg-emerald-600' },
+  const templates: { id: TemplateType; label: string }[] = [
+    { id: 'modern', label: t.modern },
+    { id: 'creative', label: t.creative },
+    { id: 'executive', label: t.executive },
+    { id: 'geometric', label: t.geometric },
+    { id: 'sidebar', label: t.sidebar },
+    { id: 'professional', label: t.professional },
   ];
 
   return (
-    <div className="flex gap-4 p-4 bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto no-print">
-      <span className="font-bold flex items-center shrink-0">{t.template}:</span>
-      {templates.map((tmp) => (
-        <button
-          key={tmp.id}
-          onClick={() => onChange(tmp.id)}
-          className={`px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 border ${
-            current === tmp.id 
-              ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold' 
-              : 'border-gray-200 hover:border-indigo-300'
-          }`}
-        >
-          <div className={`w-3 h-3 rounded-full ${tmp.color}`} />
-          {tmp.label}
-        </button>
-      ))}
+    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 no-print space-y-4">
+      <div className="flex items-center gap-3 mb-2">
+         <span className="text-xl">🖼️</span>
+         <h3 className="font-black text-slate-800 text-sm uppercase tracking-wide">{t.template}</h3>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {templates.map((tmp) => (
+          <button
+            key={tmp.id}
+            onClick={() => onChange(tmp.id)}
+            className={`px-4 py-3 rounded-2xl text-xs font-black transition-all border text-center ${
+              current === tmp.id 
+                ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' 
+                : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-300'
+            }`}
+          >
+            {tmp.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

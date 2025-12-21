@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CVData, Language, TemplateType } from './types';
 import { INITIAL_CV_DATA, SAMPLE_DATA_AR, SAMPLE_DATA_EN } from './constants';
 import { translations } from './translations';
@@ -8,12 +8,15 @@ import CVPreview from './components/CVPreview';
 import TemplateSelector from './components/TemplateSelector';
 import SpecialtySelector from './components/SpecialtySelector';
 import ColorPicker from './components/ColorPicker';
+import * as htmlToImage from 'html-to-image';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [template, setTemplate] = useState<TemplateType>('modern');
   const [themeColor, setThemeColor] = useState<string>('#4f46e5');
   const [data, setData] = useState<CVData>(INITIAL_CV_DATA);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const t = translations[lang];
 
@@ -30,8 +33,40 @@ const App: React.FC = () => {
     setData(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
   };
 
-  const handleDownload = () => {
+  const downloadPDF = () => {
     window.print();
+  };
+
+  const downloadImage = async () => {
+    if (!previewRef.current) return;
+    
+    setIsCapturing(true);
+    try {
+      // Find the inner print-container which has fixed dimensions
+      const node = previewRef.current.querySelector('.print-container') as HTMLElement;
+      if (!node) return;
+
+      // Temporary reset scale for capture
+      const originalTransform = node.style.transform;
+      node.style.transform = 'none';
+
+      const dataUrl = await htmlToImage.toPng(node, {
+        quality: 1,
+        pixelRatio: 2, // Higher quality
+        backgroundColor: '#ffffff',
+      });
+
+      node.style.transform = originalTransform;
+
+      const link = document.createElement('a');
+      link.download = `CV-${data.personalInfo.fullName || 'Sira'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Error capturing image:', err);
+    } finally {
+      setIsCapturing(false);
+    }
   };
 
   const handleSpecialtySelect = (specialtyData: CVData) => {
@@ -52,33 +87,38 @@ const App: React.FC = () => {
               className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg transition-colors"
               style={{ backgroundColor: themeColor }}
             >س</div>
-            <div>
+            <div className="hidden sm:block">
               <h1 className="text-xl font-black text-indigo-950 leading-none">{t.title}</h1>
               <p className="text-[10px] text-indigo-500 font-black uppercase tracking-[0.2em] mt-1" style={{ color: themeColor }}>{t.subtitle}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button 
               onClick={toggleLanguage}
-              className="px-5 py-2.5 rounded-2xl text-xs font-black text-slate-600 hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200"
+              className="px-4 py-2 rounded-2xl text-xs font-black text-slate-600 hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200"
             >
               {t.language}
             </button>
+            
+            <div className="w-px h-6 bg-slate-200 mx-1"></div>
+
             <button 
-              onClick={handleFillSample}
-              className="hidden md:block px-5 py-2.5 rounded-2xl text-xs font-black bg-white text-amber-600 hover:bg-amber-50 border border-amber-100 shadow-sm transition-all"
+              onClick={downloadImage}
+              disabled={isCapturing}
+              className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 transition-all disabled:opacity-50"
             >
-              ✨ {t.fillSample}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              {isCapturing ? '...' : t.downloadImage}
             </button>
-            <div className="w-px h-6 bg-slate-200 mx-2 hidden md:block"></div>
+
             <button 
-              onClick={handleDownload}
-              className="px-8 py-3 rounded-2xl text-xs font-black text-white shadow-xl transition-all active:scale-95 flex items-center gap-2"
+              onClick={downloadPDF}
+              className="px-6 py-2.5 rounded-2xl text-xs font-black text-white shadow-xl transition-all active:scale-95 flex items-center gap-2"
               style={{ backgroundColor: themeColor, boxShadow: `0 10px 15px -3px ${themeColor}44` }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-              {t.download}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+              {t.downloadPDF}
             </button>
           </div>
         </div>
@@ -88,9 +128,17 @@ const App: React.FC = () => {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-16 items-start">
           {/* Left Column: Editor */}
           <div className="space-y-8" id="cv-editor">
-            <div className="space-y-2">
-               <h2 className="text-2xl font-black text-slate-900">صمّم هويتك المهنية</h2>
-               <p className="text-slate-500 text-sm font-medium">تحكم بالألوان، القوالب، والبيانات لخلق انطباع لا ينسى.</p>
+            <div className="flex justify-between items-center">
+              <div className="space-y-1">
+                 <h2 className="text-2xl font-black text-slate-900">صمّم هويتك المهنية</h2>
+                 <p className="text-slate-500 text-sm font-medium">تحكم بالألوان، القوالب، والبيانات لخلق انطباع لا ينسى.</p>
+              </div>
+              <button 
+                onClick={handleFillSample}
+                className="px-4 py-2 rounded-xl text-[10px] font-black bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100 transition-all no-print"
+              >
+                ✨ {t.fillSample}
+              </button>
             </div>
             
             <ColorPicker color={themeColor} onChange={setThemeColor} lang={lang} />
@@ -100,7 +148,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Right Column: Preview */}
-          <div className="sticky top-32 flex justify-center no-print">
+          <div className="sticky top-32 flex justify-center no-print" ref={previewRef}>
             <div className="scale-[0.55] lg:scale-[0.85] xl:scale-[0.65] 2xl:scale-[0.9] transition-transform origin-top">
                <div className="relative group">
                  <div 
@@ -114,14 +162,21 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Mobile Action Button */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 md:hidden no-print z-50">
+      {/* Mobile Action Buttons */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 md:hidden no-print z-50 flex gap-3">
          <button 
-          onClick={handleDownload}
-          className="text-white px-10 py-5 rounded-full font-black shadow-2xl flex items-center gap-3 active:scale-90 transition-transform"
+          onClick={downloadImage}
+          disabled={isCapturing}
+          className="bg-white text-slate-800 px-6 py-4 rounded-full font-black shadow-2xl flex items-center gap-2 active:scale-90 transition-transform border border-slate-200"
+         >
+           🖼️
+         </button>
+         <button 
+          onClick={downloadPDF}
+          className="text-white px-10 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 active:scale-90 transition-transform"
           style={{ backgroundColor: themeColor }}
          >
-           {t.download} 📄
+           {t.downloadPDF} 📄
          </button>
       </div>
       

@@ -41,4 +41,4 @@ export interface CVData {
   languages: { name: string; level: string }[];
 }
 
-export type TemplateType = 'modern' | 'classic' | 'minimal';
+export type TemplateType = 'modern' | 'creative' | 'executive' | 'geometric' | 'sidebar' | 'professional';
