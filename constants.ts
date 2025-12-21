@@ -286,6 +286,186 @@ export const SPECIALTIES_DATA: Record<string, { ar: CVData; en: CVData }> = {
       ],
       languages: [{ name: 'English', level: 'Native' }, { name: 'Arabic', level: 'Fluent' }]
     }
+  },
+  civil: {
+    ar: {
+      personalInfo: {
+        fullName: 'أحمد علي الزهراني',
+        jobTitle: 'مهندس إنشائي أول (Senior Structural Engineer)',
+        email: 'ahmed.civil@example.com',
+        phone: '+966 58 222 3333',
+        location: 'الرياض، المملكة العربية السعودية',
+        summary: 'مهندس مدني ذو خبرة واسعة في تصميم وإدارة المشاريع الإنشائية الضخمة. متخصص في التحليل الإنشائي وإدارة الجودة والمواصفات العالمية للمباني. أمتلك مهارات قيادية لإدارة المواقع والعمل مع فرق متعددة التخصصات لضمان تسليم المشاريع في الموعد المحدد.',
+        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400'
+      },
+      experience: [
+        { id: '1', company: 'شركة أرامكو السعودية', position: 'مهندس موقع رئيسي', startDate: 'أكتوبر 2015', endDate: 'الحاضر', description: '• الإشراف على تنفيذ مشاريع البنية التحتية والمباني الإدارية.\n• ضمان الالتزام بمعايير السلامة والجودة العالمية.\n• مراجعة المخططات الهندسية وجداول الكميات.' }
+      ],
+      education: [{ id: '2', institution: 'جامعة الملك سعود', degree: 'بكالوريوس الهندسة المدنية', startDate: '2010', endDate: '2015', description: 'تخصص في هندسة الإنشاءات.' }],
+      skills: [{ id: 's1', name: 'AutoCAD & Revit', level: 5 }, { id: 's2', name: 'Project Management', level: 5 }],
+      languages: [{ name: 'العربية', level: 'اللغة الأم' }, { name: 'الإنجليزية', level: 'جيد جداً' }]
+    },
+    en: {
+      personalInfo: {
+        fullName: 'Ahmed Al-Zahrani',
+        jobTitle: 'Senior Structural Engineer',
+        email: 'ahmed.civil@example.com',
+        phone: '+1 555 888 7777',
+        location: 'Dubai, UAE',
+        summary: 'Civil engineer with extensive experience in designing and managing large-scale construction projects. Specialized in structural analysis, quality management, and international building standards. Strong leadership skills in managing sites and working with multidisciplinary teams.',
+        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400'
+      },
+      experience: [
+        { id: '1', company: 'Saudi Aramco', position: 'Lead Site Engineer', startDate: 'Oct 2015', endDate: 'Present', description: '• Overseeing infrastructure and administrative building projects.\n• Ensuring compliance with safety and international quality standards.\n• Reviewing engineering blueprints and bill of quantities.' }
+      ],
+      education: [{ id: '2', institution: 'KSU', degree: 'B.S. in Civil Engineering', startDate: '2010', endDate: '2015', description: 'Structural Engineering focus.' }],
+      skills: [{ id: 's1', name: 'AutoCAD & Revit', level: 5 }, { id: 's2', name: 'Project Management', level: 5 }],
+      languages: [{ name: 'English', level: 'Professional' }, { name: 'Arabic', level: 'Native' }]
+    }
+  },
+  hr: {
+    ar: {
+      personalInfo: {
+        fullName: 'ريم صالح السعدي',
+        jobTitle: 'مديرة موارد بشرية (HR Manager)',
+        email: 'reem.hr@example.com',
+        phone: '+966 59 444 5555',
+        location: 'جدة، المملكة العربية السعودية',
+        summary: 'خبيرة في إدارة الموارد البشرية مع تركيز على استقطاب الكفاءات وتطوير الثقافة التنظيمية. أمتلك خبرة واسعة في نظام العمل السعودي وبرامج التحول الرقمي للموارد البشرية. أؤمن بأن رأس المال البشري هو المحرك الأساسي لنجاح أي منشأة.',
+        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'
+      },
+      experience: [
+        { id: '1', company: 'مجموعة صافولا', position: 'رئيس قسم التوظيف', startDate: 'نوفمبر 2018', endDate: 'الحاضر', description: '• تطوير استراتيجيات التوظيف السنوية.\n• إدارة عمليات تقييم الأداء وبرامج التدريب.\n• تحسين بيئة العمل وزيادة معدل الرضا الوظيفي.' }
+      ],
+      education: [{ id: '2', institution: 'جامعة الملك عبد العزيز', degree: 'بكالوريوس إدارة الموارد البشرية', startDate: '2012', endDate: '2016', description: 'حاصلة على شهادة SHRP المعتمدة.' }],
+      skills: [{ id: 's1', name: 'Recruitment Strategy', level: 5 }, { id: 's2', name: 'Conflict Resolution', level: 5 }],
+      languages: [{ name: 'العربية', level: 'اللغة الأم' }, { name: 'الإنجليزية', level: 'ممتاز' }]
+    },
+    en: {
+      personalInfo: {
+        fullName: 'Reem Al-Saadi',
+        jobTitle: 'HR Manager',
+        email: 'reem.hr@example.com',
+        phone: '+1 555 222 1111',
+        location: 'Toronto, Canada',
+        summary: 'HR management expert focusing on talent acquisition and developing organizational culture. Extensive experience in labor laws and digital HR transformation. I believe human capital is the main driver for any facility success.',
+        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'
+      },
+      experience: [
+        { id: '1', company: 'Savola Group', position: 'Head of Talent Acquisition', startDate: 'Nov 2018', endDate: 'Present', description: '• Developing annual recruitment strategies.\n• Managing performance appraisal and training programs.\n• Improving work environment and job satisfaction rates.' }
+      ],
+      education: [{ id: '2', institution: 'University of Toronto', degree: 'B.A. in Human Resources', startDate: '2012', endDate: '2016', description: 'SHRP certified professional.' }],
+      skills: [{ id: 's1', name: 'Recruitment Strategy', level: 5 }, { id: 's2', name: 'Conflict Resolution', level: 5 }],
+      languages: [{ name: 'English', level: 'Native' }, { name: 'Arabic', level: 'Professional' }]
+    }
+  },
+  medical: {
+    ar: {
+      personalInfo: {
+        fullName: 'د. فيصل بن محمد',
+        jobTitle: 'طبيب باطنة (Internal Medicine Specialist)',
+        email: 'faisal.med@example.com',
+        phone: '+966 57 888 9999',
+        location: 'المدينة المنورة، المملكة العربية السعودية',
+        summary: 'طبيب ممارس بخبرة واسعة في تشخيص وعلاج الأمراض الباطنية. ملتزم بتقديم أعلى مستويات الرعاية الصحية القائمة على البراهين. أمتلك مهارات تواصل ممتازة مع المرضى وعائلاتهم لضمان تجربة علاجية مريحة وفعالة.',
+        image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b1f8?w=400'
+      },
+      experience: [
+        { id: '1', company: 'مستشفى الملك فيصل التخصصي', position: 'طبيب مقيم أول', startDate: 'يناير 2017', endDate: 'الحاضر', description: '• تشخيص ومتابعة الحالات المعقدة في قسم الباطنة.\n• المشاركة في الأبحاث الطبية المنشورة.\n• الإشراف على تدريب الأطباء المستجدين.' }
+      ],
+      education: [{ id: '2', institution: 'جامعة طيبة', degree: 'بكالوريوس الطب والجراحة (MBBS)', startDate: '2008', endDate: '2015', description: 'تخرج بامتياز مع مرتبة الشرف.' }],
+      skills: [{ id: 's1', name: 'Patient Care', level: 5 }, { id: 's2', name: 'Medical Diagnosis', level: 5 }],
+      languages: [{ name: 'العربية', level: 'اللغة الأم' }, { name: 'الإنجليزية', level: 'ممتاز' }]
+    },
+    en: {
+      personalInfo: {
+        fullName: 'Dr. Faisal Mohammed',
+        jobTitle: 'Internal Medicine Specialist',
+        email: 'faisal.med@example.com',
+        phone: '+1 555 000 9999',
+        location: 'Boston, USA',
+        summary: 'Practitioner with extensive experience in diagnosing and treating internal diseases. Committed to providing high levels of evidence-based healthcare. Excellent communication skills with patients and their families to ensure a comfortable experience.',
+        image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b1f8?w=400'
+      },
+      experience: [
+        { id: '1', company: 'King Faisal Specialist Hospital', position: 'Senior Resident Doctor', startDate: 'Jan 2017', endDate: 'Present', description: '• Diagnosing complex cases in the Internal Medicine department.\n• Participating in published medical research.\n• Overseeing the training of medical students.' }
+      ],
+      education: [{ id: '2', institution: 'Harvard Medical School', degree: 'MBBS', startDate: '2008', endDate: '2015', description: 'Graduated with honors.' }],
+      skills: [{ id: 's1', name: 'Patient Care', level: 5 }, { id: 's2', name: 'Medical Diagnosis', level: 5 }],
+      languages: [{ name: 'English', level: 'Native' }, { name: 'Arabic', level: 'Fluent' }]
+    }
+  },
+  teaching: {
+    ar: {
+      personalInfo: {
+        fullName: 'ليلى منصور القحطاني',
+        jobTitle: 'معلمة لغة إنجليزية أولى (Senior English Teacher)',
+        email: 'layla.teach@example.com',
+        phone: '+966 51 000 1111',
+        location: 'أبها، المملكة العربية السعودية',
+        summary: 'معلمة مبدعة تمتلك أكثر من 12 عاماً من الخبرة في تدريس اللغة الإنجليزية للمراحل الثانوية والجامعية. خبيرة في تطبيق أساليب التعلم النشط وتوظيف التقنية في التعليم. أمتلك شغفاً كبيراً بتطوير مهارات الطلاب اللغوية وتعزيز ثقتهم بأنفسهم.',
+        image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400'
+      },
+      experience: [
+        { id: '1', company: 'مدارس الرواد العالمية', position: 'رئيسة قسم اللغة الإنجليزية', startDate: 'سبتمبر 2014', endDate: 'الحاضر', description: '• تطوير المناهج الدراسية وخطط التدريس.\n• الإشراف على معلمات القسم وتقديم الدعم الفني.\n• تنظيم فعاليات وأنشطة طلابية باللغة الإنجليزية.' }
+      ],
+      education: [{ id: '2', institution: 'جامعة الملك خالد', degree: 'بكالوريوس اللغة الإنجليزية وآدابها', startDate: '2008', endDate: '2012', description: 'دبلوم عالي في التربية والتعليم.' }],
+      skills: [{ id: 's1', name: 'Curriculum Design', level: 5 }, { id: 's2', name: 'Educational Technology', level: 5 }],
+      languages: [{ name: 'العربية', level: 'اللغة الأم' }, { name: 'الإنجليزية', level: 'اللغة الأم' }]
+    },
+    en: {
+      personalInfo: {
+        fullName: 'Layla Al-Qahtani',
+        jobTitle: 'Senior English Teacher',
+        email: 'layla.teach@example.com',
+        phone: '+1 555 444 3333',
+        location: 'Sydney, Australia',
+        summary: 'Creative teacher with 12+ years of experience in teaching English for high school and university levels. Expert in active learning and integrating technology in education. Passionate about developing student language skills.',
+        image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400'
+      },
+      experience: [
+        { id: '1', company: 'Pioneer International Schools', position: 'Head of English Department', startDate: 'Sep 2014', endDate: 'Present', description: '• Developing curriculum and teaching plans.\n• Overseeing department teachers and providing technical support.\n• Organizing student activities and events in English.' }
+      ],
+      education: [{ id: '2', institution: 'University of Sydney', degree: 'B.A. in English Literature', startDate: '2008', endDate: '2012', description: 'Higher Diploma in Education.' }],
+      skills: [{ id: 's1', name: 'Curriculum Design', level: 5 }, { id: 's2', name: 'Educational Technology', level: 5 }],
+      languages: [{ name: 'English', level: 'Native' }, { name: 'Arabic', level: 'Fluent' }]
+    }
+  },
+  pm: {
+    ar: {
+      personalInfo: {
+        fullName: 'سامي عبد الرحمن البسام',
+        jobTitle: 'مدير مشاريع محترف (PMP Certified)',
+        email: 'sami.pm@example.com',
+        phone: '+966 52 777 8888',
+        location: 'الرياض، المملكة العربية السعودية',
+        summary: 'مدير مشاريع استراتيجي بخلفية تقنية وهندسية قوية. خبير في منهجيات Agile و Waterfall لإدارة دورة حياة المشروع بالكامل من التخطيط إلى التسليم. بارع في إدارة الميزانيات، الموارد، والتواصل مع أصحاب المصلحة لتحقيق نتائج استثنائية.',
+        image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400'
+      },
+      experience: [
+        { id: '1', company: 'شركة الاتصالات السعودية (STC)', position: 'مدير مكتب إدارة المشاريع (PMO)', startDate: 'يونيو 2016', endDate: 'الحاضر', description: '• إدارة محفظة مشاريع تقنية تتجاوز 50 مليون ريال.\n• تطبيق منهجيات إدارة المشاريع لزيادة كفاءة العمل بنسبة 30%.\n• التنسيق بين الفرق التقنية والتجارية لضمان التوافق الاستراتيجي.' }
+      ],
+      education: [{ id: '2', institution: 'جامعة الأمير سلطان', degree: 'ماجستير إدارة المشاريع', startDate: '2012', endDate: '2014', description: 'بكالوريوس نظم المعلومات الإدارية.' }],
+      skills: [{ id: 's1', name: 'Risk Management', level: 5 }, { id: 's2', name: 'Agile & Scrum', level: 5 }],
+      languages: [{ name: 'العربية', level: 'اللغة الأم' }, { name: 'الإنجليزية', level: 'مستوى احترافي' }]
+    },
+    en: {
+      personalInfo: {
+        fullName: 'Sami Al-Bassam',
+        jobTitle: 'Certified Project Manager (PMP)',
+        email: 'sami.pm@example.com',
+        phone: '+1 555 777 8888',
+        location: 'London, UK',
+        summary: 'Strategic Project Manager with a strong technical and engineering background. Expert in Agile and Waterfall methodologies to manage the full project lifecycle. Skilled in budget management, resources, and stakeholder communication.',
+        image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400'
+      },
+      experience: [
+        { id: '1', company: 'STC Solutions', position: 'PMO Manager', startDate: 'Jun 2016', endDate: 'Present', description: '• Managing a tech project portfolio exceeding $15M.\n• Implementing PM methodologies to increase efficiency by 30%.\n• Coordinating between tech and business teams.' }
+      ],
+      education: [{ id: '2', institution: 'London School of Economics', degree: 'M.Sc. in Project Management', startDate: '2012', endDate: '2014', description: 'B.S. in Information Systems.' }],
+      skills: [{ id: 's1', name: 'Risk Management', level: 5 }, { id: 's2', name: 'Agile & Scrum', level: 5 }],
+      languages: [{ name: 'English', level: 'Native' }, { name: 'Arabic', level: 'Professional' }]
+    }
   }
 };
 
