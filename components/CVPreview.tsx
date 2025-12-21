@@ -10,7 +10,7 @@ interface Props {
   fontFamily: string;
 }
 
-const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&q=80";
+const DEFAULT_AVATAR = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YxZjVmOSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMzgiIHI9IjIwIiBmaWxsPSIjY2JkNWUxIi8+PHBhdGggZD0iTTIwIDkwYzAtMTUgMTItMjggMzAtMjhzMzAgMTMgMzAgMjh2MTBIMjBWOTB6IiBmaWxsPSIjY2JkNWUxIi8+PC9zdmc+";
 
 const SectionIcons = {
   Profile: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>,
@@ -71,7 +71,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
 
   const templatesMap: Record<TemplateType, () => React.ReactElement> = {
     modern: () => (
-      <div className="flex flex-col min-h-[1123px] bg-white text-slate-800 p-12" style={containerStyle}>
+      <div className="flex flex-col min-h-[1123px] h-full bg-white text-slate-800 p-12" style={containerStyle}>
         <header className="mb-12 border-b-4 pb-8" style={{ borderColor: themeColor }}>
           <div className="flex items-center gap-8">
             <img src={userImage} className="w-32 h-32 rounded-2xl object-cover shadow-md border-4 border-white" alt="Profile" />
@@ -86,7 +86,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
             </div>
           </div>
         </header>
-        <div className="flex gap-12 flex-1">
+        <div className="flex gap-12 flex-1 h-full">
           <main className="flex-[2] space-y-10">
             <section><SectionTitle icon={SectionIcons.Profile}>{isRtl ? 'الملف الشخصي' : 'Profile'}</SectionTitle><p className="text-sm opacity-80 leading-relaxed">{data.personalInfo.summary}</p></section>
             <section><SectionTitle icon={SectionIcons.Work}>{isRtl ? 'الخبرة' : 'Experience'}</SectionTitle>{renderExperience()}</section>
@@ -101,14 +101,14 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
       </div>
     ),
     executive: () => (
-      <div className="flex min-h-[1123px] bg-white" style={containerStyle}>
+      <div className="flex min-h-[1123px] h-full bg-white" style={containerStyle}>
         <aside className="w-72 bg-slate-900 text-white p-10 space-y-10 flex flex-col min-h-full">
           <img src={userImage} className="w-full aspect-square rounded-xl object-cover mb-8 grayscale hover:grayscale-0 transition-all border-2 border-white/20" alt="Profile" />
           <section><SectionTitle light>{isRtl ? 'اتصال' : 'Contact'}</SectionTitle><div className="text-[10px] space-y-2 opacity-70"><p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p></div></section>
           <section className="flex-1"><SectionTitle light>{isRtl ? 'المهارات' : 'Skills'}</SectionTitle>{renderSkills(true)}</section>
           <div className="pt-10 border-t border-white/10 text-[8px] opacity-30 font-bold uppercase tracking-widest">{isRtl ? 'سيرة بلاتينيوم' : 'Sira Platinum Standard'}</div>
         </aside>
-        <main className="flex-1 p-16">
+        <main className="flex-1 p-16 h-full">
           <header className="mb-12 border-l-8 pl-6" style={{ borderColor: themeColor }}>
             <h1 className="text-5xl font-black text-slate-900 mb-2">{data.personalInfo.fullName}</h1>
             <p className="text-lg font-bold uppercase tracking-widest text-slate-400">{data.personalInfo.jobTitle}</p>
@@ -119,9 +119,8 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
       </div>
     ),
     creative: () => (
-      <div className="flex flex-col min-h-[1123px] bg-slate-50" style={containerStyle}>
-        <header className="h-72 flex items-center justify-between p-12 text-white relative overflow-hidden" style={{ backgroundColor: themeColor }}>
-          {/* Abstract background shapes - Swapped based on language */}
+      <div className="flex flex-col min-h-[1123px] h-full bg-slate-50" style={containerStyle}>
+        <header className="h-72 flex items-center justify-between p-12 text-white relative overflow-hidden shrink-0" style={{ backgroundColor: themeColor }}>
           <div className={`absolute top-0 ${isRtl ? 'left-0' : 'right-0'} w-96 h-96 bg-white/10 rounded-full -mr-20 -mt-20`}></div>
           <div className={`absolute bottom-0 ${isRtl ? 'right-0' : 'left-0'} w-48 h-48 bg-black/5 rounded-full -ml-10 -mb-10`}></div>
           
@@ -142,14 +141,14 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
              />
           </div>
         </header>
-        <div className="p-12 grid grid-cols-12 gap-12 flex-1">
+        <div className="p-12 grid grid-cols-12 gap-12 flex-1 h-full">
           <div className="col-span-4 space-y-10">
              <div className="bg-white p-8 rounded-[3rem] shadow-sm space-y-8 h-full border border-slate-100">
                <section><SectionTitle minimal>{isRtl ? 'مهاراتي' : 'My Skills'}</SectionTitle>{renderSkills()}</section>
                <section><SectionTitle minimal>{isRtl ? 'اتصل بي' : 'Contact'}</SectionTitle><div className="text-[11px] space-y-2 font-bold opacity-60"><p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p></div></section>
              </div>
           </div>
-          <div className="col-span-8 space-y-10">
+          <div className="col-span-8 space-y-10 h-full">
             <section className="bg-white p-10 rounded-[3rem] border border-slate-100"><p className="text-xl font-medium leading-relaxed italic text-slate-600">"{data.personalInfo.summary}"</p></section>
             <section><SectionTitle minimal>{isRtl ? 'ماذا فعلت؟' : 'Experiences'}</SectionTitle>{renderExperience()}</section>
           </div>
@@ -157,10 +156,10 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
       </div>
     ),
     geometric: () => (
-      <div className="p-16 min-h-[1123px] bg-white relative flex flex-col" style={containerStyle}>
+      <div className="p-16 min-h-[1123px] h-full bg-white relative flex flex-col" style={containerStyle}>
         <div className="absolute top-0 left-0 w-full h-4 bg-slate-900" style={{ backgroundColor: themeColor }}></div>
         <div className="absolute top-0 right-0 w-32 h-32 opacity-10" style={{ background: `linear-gradient(135deg, ${themeColor} 50%, transparent 50%)` }}></div>
-        <header className="mb-16 flex justify-between items-center border-b pb-8 mt-10">
+        <header className="mb-16 flex justify-between items-center border-b pb-8 mt-10 shrink-0">
           <div className="flex items-center gap-6">
             <img src={userImage} className="w-24 h-24 rounded-lg object-cover shadow-lg border-2" style={{ borderColor: themeColor }} alt="Profile" />
             <div>
@@ -172,11 +171,11 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
             <p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p>
           </div>
         </header>
-        <div className="grid grid-cols-12 gap-16 flex-1">
-          <div className="col-span-7 space-y-12">
+        <div className="grid grid-cols-12 gap-16 flex-1 h-full">
+          <div className="col-span-7 space-y-12 h-full">
             <section><SectionTitle minimal>{isRtl ? 'الخبرات' : 'Experience'}</SectionTitle>{renderExperience()}</section>
           </div>
-          <div className="col-span-5 space-y-12">
+          <div className="col-span-5 space-y-12 h-full">
             <section><SectionTitle minimal>{isRtl ? 'القدرات' : 'Capabilities'}</SectionTitle>{renderSkills()}</section>
             <section><SectionTitle minimal>{isRtl ? 'التعليم' : 'Education'}</SectionTitle>
               {data.education.map(edu => <div key={edu.id} className="mb-4 p-4 border-l-4" style={{ borderColor: themeColor }}><p className="font-black text-xs">{edu.degree}</p><p className="text-[10px] opacity-60 uppercase">{edu.institution}</p></div>)}
@@ -187,18 +186,18 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
       </div>
     ),
     sidebar: () => (
-      <div className="flex min-h-[1123px] bg-white" style={containerStyle}>
+      <div className="flex min-h-[1123px] h-full bg-white" style={containerStyle}>
         <aside className="w-24 bg-slate-50 flex flex-col items-center py-12 gap-10 border-r border-slate-100 min-h-full">
            <img src={userImage} className="w-16 h-16 rounded-2xl object-cover shadow-xl grayscale" alt="Profile" />
            <div className="flex-1 w-px bg-slate-200"></div>
            <div className="rotate-90 text-[10px] font-black text-slate-300 uppercase tracking-[0.5em] whitespace-nowrap mb-12 origin-center">RESUME DOCUMENT</div>
         </aside>
-        <main className="flex-1 p-20 flex gap-16">
-           <div className="flex-[2] space-y-12">
+        <main className="flex-1 p-20 flex gap-16 h-full">
+           <div className="flex-[2] space-y-12 h-full">
              <header><h1 className="text-6xl font-black mb-2 tracking-tighter">{data.personalInfo.fullName}</h1><p className="text-2xl font-bold opacity-40 uppercase tracking-widest">{data.personalInfo.jobTitle}</p></header>
              <section><SectionTitle minimal>{isRtl ? 'الخبرة المهنية' : 'Work History'}</SectionTitle>{renderExperience()}</section>
            </div>
-           <div className="flex-1 space-y-12 pt-32">
+           <div className="flex-1 space-y-12 pt-32 h-full">
              <section className="bg-slate-50 p-8 rounded-3xl border border-slate-100"><SectionTitle minimal>{isRtl ? 'المهارات' : 'Skills'}</SectionTitle>{renderSkills()}</section>
              <section className="px-8"><SectionTitle minimal>{isRtl ? 'بيانات التواصل' : 'Contact info'}</SectionTitle><div className="text-[10px] space-y-3 font-bold opacity-40"><p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p></div></section>
            </div>
@@ -206,8 +205,8 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
       </div>
     ),
     professional: () => (
-      <div className="p-16 min-h-[1123px] bg-white text-center flex flex-col" style={containerStyle}>
-        <header className="mb-12">
+      <div className="p-16 min-h-[1123px] h-full bg-white text-center flex flex-col" style={containerStyle}>
+        <header className="mb-12 shrink-0">
           <img src={userImage} className="w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4 shadow-sm" style={{ borderColor: themeColor }} alt="Profile" />
           <h1 className="text-4xl font-black mb-4 uppercase tracking-[0.2em]">{data.personalInfo.fullName}</h1>
           <div className="h-1 w-40 mx-auto rounded-full mb-4" style={{ backgroundColor: themeColor }}></div>
@@ -216,9 +215,9 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
              <span>{data.personalInfo.email}</span><span>{data.personalInfo.phone}</span><span>{data.personalInfo.location}</span>
           </div>
         </header>
-        <div className="text-right space-y-12 flex-1" dir={isRtl ? 'rtl' : 'ltr'}>
+        <div className="text-right space-y-12 flex-1 h-full" dir={isRtl ? 'rtl' : 'ltr'}>
           <section className="text-center px-24"><p className="text-md leading-loose opacity-70 font-medium">{data.personalInfo.summary}</p></section>
-          <section className="grid grid-cols-2 gap-20 mt-10">
+          <section className="grid grid-cols-2 gap-20 mt-10 h-full">
             <div className="border-r border-slate-100 px-6"><SectionTitle minimal>{isRtl ? 'الخبرة' : 'Work Experience'}</SectionTitle>{renderExperience()}</div>
             <div className="space-y-16 px-6">
               <div><SectionTitle minimal>{isRtl ? 'المهارات' : 'Core Skills'}</SectionTitle>{renderSkills()}</div>
@@ -228,12 +227,12 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
             </div>
           </section>
         </div>
-        <footer className="mt-20 pt-10 border-t text-[10px] opacity-20 font-black tracking-[0.5em]">{isRtl ? 'سيرة - المعيار المهني' : 'SIRA - PROFESSIONAL STANDARD'}</footer>
+        <footer className="mt-20 pt-10 border-t text-[10px] opacity-20 font-black tracking-[0.5em] shrink-0">{isRtl ? 'سيرة - المعيار المهني' : 'SIRA - PROFESSIONAL STANDARD'}</footer>
       </div>
     ),
     minimalist: () => (
-      <div className="p-20 min-h-[1123px] bg-white text-slate-900 flex flex-col" style={containerStyle}>
-        <header className="mb-20 flex justify-between items-start">
+      <div className="p-20 min-h-[1123px] h-full bg-white text-slate-900 flex flex-col" style={containerStyle}>
+        <header className="mb-20 flex justify-between items-start shrink-0">
           <div>
             <h1 className="text-4xl font-light mb-2 tracking-tight">{data.personalInfo.fullName}</h1>
             <p className="text-lg opacity-40 font-medium mb-10">{data.personalInfo.jobTitle}</p>
@@ -243,7 +242,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
           </div>
           <img src={userImage} className="w-32 h-32 rounded-sm object-cover grayscale opacity-80" alt="Profile" />
         </header>
-        <div className="space-y-20 flex-1">
+        <div className="space-y-20 flex-1 h-full">
            <section className="max-w-2xl"><SectionTitle minimal>{isRtl ? 'عني' : 'About'}</SectionTitle><p className="text-sm leading-loose opacity-60 font-medium">{data.personalInfo.summary}</p></section>
            <section><SectionTitle minimal>{isRtl ? 'الخبرة' : 'Experience'}</SectionTitle>{renderExperience()}</section>
            <section><SectionTitle minimal>{isRtl ? 'المهارات' : 'Expertise'}</SectionTitle>
@@ -255,8 +254,8 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
       </div>
     ),
     technical: () => (
-      <div className="p-12 min-h-[1123px] bg-white text-slate-800 flex flex-col" style={containerStyle}>
-        <header className="grid grid-cols-12 border-4 border-slate-900 mb-12 overflow-hidden">
+      <div className="p-12 min-h-[1123px] h-full bg-white text-slate-800 flex flex-col" style={containerStyle}>
+        <header className="grid grid-cols-12 border-4 border-slate-900 mb-12 overflow-hidden shrink-0">
           <div className="col-span-8 p-10 bg-slate-900 text-white flex items-center gap-8">
             <img src={userImage} className="w-24 h-24 rounded border-2 border-white/20 object-cover" alt="Profile" />
             <div>
@@ -270,13 +269,13 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
             <p className="flex items-center justify-end gap-2"><span>{data.personalInfo.location}</span> <span className="w-2 h-2 rounded-full" style={{ backgroundColor: themeColor }}></span></p>
           </div>
         </header>
-        <div className="space-y-12 flex-1">
+        <div className="space-y-12 flex-1 h-full">
           <section className="border-b-2 border-slate-100 pb-10"><SectionTitle minimal>{isRtl ? 'نظرة فنية' : 'Technical Overview'}</SectionTitle><p className="text-sm font-mono opacity-80 leading-relaxed bg-slate-50 p-6 rounded-xl border border-slate-100">{data.personalInfo.summary}</p></section>
-          <div className="grid grid-cols-12 gap-16">
-             <div className="col-span-8 space-y-12">
+          <div className="grid grid-cols-12 gap-16 h-full">
+             <div className="col-span-8 space-y-12 h-full">
                <section><SectionTitle minimal>{isRtl ? 'المشاريع والخبرات' : 'Technical Projects & Exp'}</SectionTitle>{renderExperience()}</section>
              </div>
-             <div className="col-span-4 space-y-12">
+             <div className="col-span-4 space-y-12 h-full">
                <section><SectionTitle minimal>{isRtl ? 'اللغات والمهارات' : 'Tech Stack'}</SectionTitle>{renderSkills()}</section>
                <section><SectionTitle minimal>{isRtl ? 'الشهادات' : 'Certifications'}</SectionTitle>
                 {data.education.map(edu => <div key={edu.id} className="mb-6 p-4 bg-slate-50 border-r-4 border-slate-900" style={{ borderColor: themeColor }}><p className="font-black text-xs">{edu.degree}</p><p className="text-[10px] opacity-40 uppercase mt-1">{edu.institution}</p></div>)}
@@ -284,27 +283,27 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
              </div>
           </div>
         </div>
-        <div className="text-[8px] font-mono opacity-20 text-center pt-10">GEN-CV-SIRA-ENGINE-UUID-{Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
+        <div className="text-[8px] font-mono opacity-20 text-center pt-10 shrink-0">GEN-CV-SIRA-ENGINE-UUID-{Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
       </div>
     ),
     bold: () => (
-      <div className="flex min-h-[1123px]" style={containerStyle}>
-        <div className="w-1/3 bg-slate-900 p-12 space-y-12 text-white min-h-full" style={{ backgroundColor: themeColor }}>
+      <div className="flex min-h-[1123px] h-full" style={containerStyle}>
+        <div className="w-1/3 bg-slate-900 p-12 space-y-12 text-white min-h-full h-full shrink-0" style={{ backgroundColor: themeColor }}>
           <img src={userImage} className="w-full rounded-full border-8 border-white/20 shadow-2xl aspect-square object-cover" alt="Profile" />
           <section className="pt-10"><SectionTitle light minimal>{isRtl ? 'تواصل' : 'Connect'}</SectionTitle><div className="text-[12px] font-black space-y-4 opacity-70"><p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p>{data.personalInfo.location}</p></div></section>
           <section className="flex-1"><SectionTitle light minimal>{isRtl ? 'المهارات' : 'Skills'}</SectionTitle>{renderSkills(true)}</section>
         </div>
-        <div className="flex-1 p-20 space-y-16 bg-white flex flex-col min-h-full">
-           <header><h1 className="text-8xl font-black tracking-tighter text-slate-900 leading-none">{data.personalInfo.fullName.split(' ')[0]}<br/>{data.personalInfo.fullName.split(' ').slice(1).join(' ')}</h1><p className="text-2xl font-black mt-6 uppercase tracking-[0.3em] opacity-30">{data.personalInfo.jobTitle}</p></header>
-           <section><SectionTitle minimal>{isRtl ? 'القصة المهنية' : 'My Story'}</SectionTitle><p className="text-xl leading-relaxed text-slate-500 font-medium italic">"{data.personalInfo.summary}"</p></section>
-           <section className="flex-1"><SectionTitle minimal>{isRtl ? 'التجارب' : 'Experiences'}</SectionTitle>{renderExperience()}</section>
+        <div className="flex-1 p-20 space-y-16 bg-white flex flex-col min-h-full h-full overflow-hidden">
+           <header className="shrink-0"><h1 className="text-8xl font-black tracking-tighter text-slate-900 leading-none">{data.personalInfo.fullName.split(' ')[0]}<br/>{data.personalInfo.fullName.split(' ').slice(1).join(' ')}</h1><p className="text-2xl font-black mt-6 uppercase tracking-[0.3em] opacity-30">{data.personalInfo.jobTitle}</p></header>
+           <section className="shrink-0"><SectionTitle minimal>{isRtl ? 'القصة المهنية' : 'My Story'}</SectionTitle><p className="text-xl leading-relaxed text-slate-500 font-medium italic">"{data.personalInfo.summary}"</p></section>
+           <section className="flex-1 h-full"><SectionTitle minimal>{isRtl ? 'التجارب' : 'Experiences'}</SectionTitle>{renderExperience()}</section>
         </div>
       </div>
     ),
     compact: () => (
-      <div className="p-10 min-h-[1123px] bg-white text-slate-900 grid grid-cols-2 gap-10 flex flex-col" style={containerStyle}>
-         <div className="space-y-10 flex flex-col">
-            <header className="pb-10 border-b-2 border-slate-900">
+      <div className="p-10 min-h-[1123px] h-full bg-white text-slate-900 grid grid-cols-2 gap-10 flex flex-col" style={containerStyle}>
+         <div className="space-y-10 flex flex-col h-full">
+            <header className="pb-10 border-b-2 border-slate-900 shrink-0">
                <div className="flex items-center gap-4 mb-6">
                  <img src={userImage} className="w-20 h-20 rounded-2xl object-cover shadow-lg border-2 border-white" alt="Profile" />
                  <div>
@@ -316,13 +315,13 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
                  <p>{data.personalInfo.email}</p><p>{data.personalInfo.phone}</p><p className="col-span-2">{data.personalInfo.location}</p>
                </div>
             </header>
-            <section><SectionTitle minimal>{isRtl ? 'نبذة' : 'Summary'}</SectionTitle><p className="text-[12px] leading-loose opacity-70 font-medium">{data.personalInfo.summary}</p></section>
-            <section className="flex-1"><SectionTitle minimal>{isRtl ? 'التعليم' : 'Education'}</SectionTitle>
+            <section className="shrink-0"><SectionTitle minimal>{isRtl ? 'نبذة' : 'Summary'}</SectionTitle><p className="text-[12px] leading-loose opacity-70 font-medium">{data.personalInfo.summary}</p></section>
+            <section className="flex-1 h-full"><SectionTitle minimal>{isRtl ? 'التعليم' : 'Education'}</SectionTitle>
               {data.education.map(edu => <div key={edu.id} className="mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-100"><p className="font-black text-xs">{edu.degree}</p><p className="text-[10px] opacity-40 uppercase mt-1">{edu.institution}</p></div>)}
             </section>
          </div>
-         <div className="space-y-10 flex flex-col">
-            <section className="flex-1"><SectionTitle minimal>{isRtl ? 'الخبرة' : 'Experience'}</SectionTitle>
+         <div className="space-y-10 flex flex-col h-full">
+            <section className="flex-1 h-full"><SectionTitle minimal>{isRtl ? 'الخبرة' : 'Experience'}</SectionTitle>
                <div className="space-y-6">
                  {data.experience.map(exp => (
                    <div key={exp.id} className="border-b border-slate-50 pb-6 last:border-0">
@@ -333,7 +332,7 @@ const CVPreview: React.FC<Props> = ({ data, lang, template, themeColor, fontFami
                  ))}
                </div>
             </section>
-            <section className="bg-slate-900 p-10 rounded-[3rem] text-white" style={{ backgroundColor: themeColor }}><SectionTitle light minimal>{isRtl ? 'المهارات' : 'Skills'}</SectionTitle>{renderSkills(true)}</section>
+            <section className="bg-slate-900 p-10 rounded-[3rem] text-white shrink-0" style={{ backgroundColor: themeColor }}><SectionTitle light minimal>{isRtl ? 'المهارات' : 'Skills'}</SectionTitle>{renderSkills(true)}</section>
          </div>
       </div>
     )

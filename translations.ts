@@ -49,6 +49,8 @@ export const translations = {
     next: "التالي",
     prev: "السابق",
     chooseSpecialty: "اختر تخصصك للتعبئة الفورية",
+    counterTitle: "سير ذاتية أُنشئت باحترافية",
+    liveNow: "نشط الآن",
     specialties: {
       software: "برمجيات",
       design: "تصميم UI/UX",
@@ -116,6 +118,8 @@ export const translations = {
     next: "Next",
     prev: "Previous",
     chooseSpecialty: "Quick Fill by Specialty",
+    counterTitle: "Professional Resumes Created",
+    liveNow: "Live Now",
     specialties: {
       software: "Software Eng",
       design: "UI/UX Design",

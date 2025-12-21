@@ -29,9 +29,28 @@ const App: React.FC = () => {
   const [data, setData] = useState<CVData>(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
   const [activePanel, setActivePanel] = useState<ActivePanel>('quick');
   const [isCapturing, setIsCapturing] = useState(false);
+  const [cvCounter, setCvCounter] = useState<number>(128450);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const t = translations[lang];
+
+  // Logic for the live counter
+  useEffect(() => {
+    const savedCounter = localStorage.getItem('sira_cv_counter');
+    const baseValue = savedCounter ? parseInt(savedCounter) : 128450;
+    setCvCounter(baseValue);
+
+    const interval = setInterval(() => {
+      setCvCounter(prev => {
+        const increment = Math.floor(Math.random() * 3) + 1; // Increment by 1-3
+        const newValue = prev + increment;
+        localStorage.setItem('sira_cv_counter', newValue.toString());
+        return newValue;
+      });
+    }, 5000); // Update every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -206,6 +225,34 @@ const App: React.FC = () => {
 
         </div>
       </main>
+
+      {/* Live Counter Section - NEW */}
+      <section className="w-full max-w-7xl mx-auto px-10 mb-20 no-print" aria-label="إحصائيات النجاح">
+         <div className="bg-white/80 backdrop-blur-xl border border-white rounded-[3rem] p-12 flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl shadow-slate-200/50">
+            <div className="flex-1 space-y-4 text-center md:text-start">
+               <div className="inline-flex items-center gap-3 bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  </span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">{t.liveNow}</span>
+               </div>
+               <h3 className="text-3xl font-black text-slate-900 leading-tight">
+                  {t.counterTitle}
+               </h3>
+               <p className="text-slate-400 text-sm font-medium max-w-md">
+                 {lang === 'ar' ? 'انضم لآلاف المحترفين الذين حصلوا على وظائف أحلامهم باستخدام قوالبنا المعتمدة.' : 'Join thousands of professionals who secured their dream jobs using our certified templates.'}
+               </p>
+            </div>
+            
+            <div className="flex flex-col items-center md:items-end">
+               <div className="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter tabular-nums drop-shadow-sm">
+                 {cvCounter.toLocaleString()}
+               </div>
+               <div className="w-20 h-1.5 bg-slate-900 rounded-full mt-4" style={{ backgroundColor: themeColor }}></div>
+            </div>
+         </div>
+      </section>
 
       <div className="fixed inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] z-[-1] opacity-40"></div>
 
