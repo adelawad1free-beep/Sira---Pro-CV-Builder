@@ -45,18 +45,18 @@ export const translations = {
     remove: "حذف",
     next: "التالي",
     prev: "السابق",
-    chooseSpecialty: "اختر تخصصك للحصول على قالب جاهز ببيانات مكتملة",
+    chooseSpecialty: "اختر تخصصك للتعبئة الفورية",
     specialties: {
-      software: "هندسة البرمجيات",
-      design: "التصميم الإبداعي",
-      accounting: "المحاسبة والمالية",
-      marketing: "التسويق الرقمي",
-      sales: "المبيعات والنمو",
-      civil: "الهندسة المدنية",
-      hr: "الموارد البشرية",
-      medical: "الطب والرعاية الصحية",
-      teaching: "التعليم والأكاديميا",
-      pm: "إدارة المشاريع"
+      software: "برمجيات",
+      design: "تصميم",
+      accounting: "محاسبة",
+      marketing: "تسويق",
+      sales: "مبيعات",
+      civil: "هندسة",
+      hr: "موارد بشرية",
+      medical: "طب",
+      teaching: "تعليم",
+      pm: "إدارة مشاريع"
     }
   },
   en: {
@@ -104,18 +104,18 @@ export const translations = {
     remove: "Remove",
     next: "Next",
     prev: "Previous",
-    chooseSpecialty: "Select your specialty for a ready-to-use template",
+    chooseSpecialty: "Quick Fill by Specialty",
     specialties: {
-      software: "Software Engineer",
-      design: "Graphic Designer",
-      accounting: "Accountant",
+      software: "Software",
+      design: "Design",
+      accounting: "Accounting",
       marketing: "Marketing",
       sales: "Sales",
-      civil: "Civil Engineer",
-      hr: "HR Specialist",
-      medical: "Doctor",
-      teaching: "Teacher",
-      pm: "Project Manager"
+      civil: "Civil Eng",
+      hr: "HR",
+      medical: "Medical",
+      teaching: "Education",
+      pm: "Management"
     }
   }
 };

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { CVData, Language, TemplateType } from './types';
-import { INITIAL_CV_DATA, SAMPLE_DATA_AR, SAMPLE_DATA_EN } from './constants';
+import { SAMPLE_DATA_AR, SAMPLE_DATA_EN } from './constants';
 import { translations } from './translations';
 import CVForm from './components/CVForm';
 import CVPreview from './components/CVPreview';
@@ -14,7 +14,8 @@ const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [template, setTemplate] = useState<TemplateType>('modern');
   const [themeColor, setThemeColor] = useState<string>('#4f46e5');
-  const [data, setData] = useState<CVData>(INITIAL_CV_DATA);
+  // Initialize with sample data directly instead of empty data
+  const [data, setData] = useState<CVData>(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
   const [isCapturing, setIsCapturing] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -23,14 +24,13 @@ const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
+    
+    // Switch data if language changes and data is still one of the defaults
+    setData(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
   }, [lang]);
 
   const toggleLanguage = () => {
     setLang(prev => prev === 'ar' ? 'en' : 'ar');
-  };
-
-  const handleFillSample = () => {
-    setData(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
   };
 
   const downloadPDF = () => {
@@ -42,17 +42,15 @@ const App: React.FC = () => {
     
     setIsCapturing(true);
     try {
-      // Find the inner print-container which has fixed dimensions
       const node = previewRef.current.querySelector('.print-container') as HTMLElement;
       if (!node) return;
 
-      // Temporary reset scale for capture
       const originalTransform = node.style.transform;
       node.style.transform = 'none';
 
       const dataUrl = await htmlToImage.toPng(node, {
         quality: 1,
-        pixelRatio: 2, // Higher quality
+        pixelRatio: 2,
         backgroundColor: '#ffffff',
       });
 
@@ -108,7 +106,7 @@ const App: React.FC = () => {
               disabled={isCapturing}
               className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 transition-all disabled:opacity-50"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 00-2 2z" /></svg>
               {isCapturing ? '...' : t.downloadImage}
             </button>
 
@@ -133,12 +131,7 @@ const App: React.FC = () => {
                  <h2 className="text-2xl font-black text-slate-900">صمّم هويتك المهنية</h2>
                  <p className="text-slate-500 text-sm font-medium">تحكم بالألوان، القوالب، والبيانات لخلق انطباع لا ينسى.</p>
               </div>
-              <button 
-                onClick={handleFillSample}
-                className="px-4 py-2 rounded-xl text-[10px] font-black bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100 transition-all no-print"
-              >
-                ✨ {t.fillSample}
-              </button>
+              {/* Removed Fill Sample Button as requested */}
             </div>
             
             <ColorPicker color={themeColor} onChange={setThemeColor} lang={lang} />
