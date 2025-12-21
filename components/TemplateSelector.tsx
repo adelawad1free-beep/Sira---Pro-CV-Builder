@@ -9,16 +9,19 @@ interface Props {
   lang: Language;
 }
 
-const Icons = {
-  Modern: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>,
-  Executive: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-};
-
 const TemplateSelector: React.FC<Props> = ({ current, onChange, lang }) => {
   const t = translations[lang];
-  const templates: { id: TemplateType; label: string; icon: any }[] = [
-    { id: 'modern', label: t.modern, icon: Icons.Modern },
-    { id: 'executive', label: t.executive, icon: Icons.Executive }
+  const templates: { id: TemplateType; label: string }[] = [
+    { id: 'modern', label: t.modern },
+    { id: 'executive', label: t.executive },
+    { id: 'creative', label: t.creative },
+    { id: 'geometric', label: t.geometric },
+    { id: 'sidebar', label: t.sidebar },
+    { id: 'professional', label: t.professional },
+    { id: 'minimalist', label: t.minimalist },
+    { id: 'technical', label: t.technical },
+    { id: 'bold', label: t.bold },
+    { id: 'compact', label: t.compact },
   ];
 
   return (
@@ -29,19 +32,19 @@ const TemplateSelector: React.FC<Props> = ({ current, onChange, lang }) => {
          </div>
          <h3 className="font-black text-slate-800 text-[10px] uppercase tracking-[0.2em]">{t.template}</h3>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {templates.map((tmp) => (
           <button
             key={tmp.id}
             onClick={() => onChange(tmp.id)}
-            className={`flex flex-col items-center gap-3 p-4 rounded-2xl transition-all border text-center ${
+            className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl transition-all border text-center ${
               current === tmp.id 
-                ? 'border-slate-900 bg-slate-50 text-slate-900 shadow-sm' 
-                : 'border-slate-200 bg-white text-slate-400 hover:border-slate-300'
+                ? 'border-slate-900 bg-slate-900 text-white shadow-md scale-[1.02]' 
+                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'
             }`}
           >
-            <tmp.icon />
-            <span className="text-[10px] font-black uppercase tracking-tight">{tmp.label}</span>
+            <div className={`w-full h-8 rounded-md mb-1 ${current === tmp.id ? 'bg-white/20' : 'bg-slate-100'}`}></div>
+            <span className="text-[9px] font-black uppercase tracking-tight">{tmp.label}</span>
           </button>
         ))}
       </div>

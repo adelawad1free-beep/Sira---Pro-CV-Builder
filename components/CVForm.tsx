@@ -69,7 +69,7 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
             {tab === 'experience' && <Icons.Briefcase />}
             {tab === 'education' && <Icons.Graduation />}
             {tab === 'skills' && <Icons.Wrench />}
-            <span className="hidden lg:inline">{(t as any)[tab]}</span>
+            <span className="hidden lg:inline">{tab === 'personal' ? t.personalInfo : (t as any)[tab]}</span>
           </button>
         ))}
       </div>
@@ -86,13 +86,17 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
                 ) : (
                   <label className="w-36 h-36 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:bg-white hover:border-slate-900 transition-all text-slate-400 group">
                     <Icons.Image />
-                    <span className="text-[10px] font-black mt-3">رفع صورة</span>
+                    <span className="text-[10px] font-black mt-3">{lang === 'ar' ? 'رفع صورة' : 'Upload Photo'}</span>
                     <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                   </label>
                 )}
                 <div className="flex-1 text-center sm:text-right">
                    <h4 className="text-[16px] font-black text-slate-800">{t.uploadImage}</h4>
-                   <p className="text-[11px] text-slate-400 font-bold mt-3 leading-relaxed">يرجى اختيار صورة رسمية واضحة بخلفية بسيطة لضمان أفضل انطباع مهني.</p>
+                   <p className="text-[11px] text-slate-400 font-bold mt-3 leading-relaxed">
+                     {lang === 'ar' 
+                      ? 'يرجى اختيار صورة رسمية واضحة بخلفية بسيطة لضمان أفضل انطباع مهني.' 
+                      : 'Please choose a clear formal photo with a simple background for a professional impression.'}
+                   </p>
                 </div>
              </div>
 
@@ -124,6 +128,10 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
                     <Input label={t.startDate} value={exp.startDate} onChange={(v: string) => { let l = [...data.experience]; l[index].startDate = v; setData({...data, experience: l}); }} />
                     <Input label={t.endDate} value={exp.endDate} onChange={(v: string) => { let l = [...data.experience]; l[index].endDate = v; setData({...data, experience: l}); }} />
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">{t.description}</label>
+                    <textarea rows={4} className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-1 focus:ring-slate-900 focus:bg-white outline-none transition-all text-[12px] font-bold text-slate-700" value={exp.description} onChange={(e) => { let l = [...data.experience]; l[index].description = e.target.value; setData({...data, experience: l}); }} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -133,16 +141,73 @@ const CVForm: React.FC<Props> = ({ data, setData, lang }) => {
           </div>
         )}
 
+        {activeTab === 'education' && (
+          <div className="space-y-8">
+            {data.education.map((edu, index) => (
+              <div key={edu.id} className="p-10 bg-white border border-slate-100 rounded-[3rem] relative group shadow-sm hover:border-slate-300 transition-all">
+                <button onClick={() => setData(prev => ({...prev, education: prev.education.filter(e => e.id !== edu.id)}))} className="absolute top-8 right-8 text-slate-200 hover:text-red-600 transition-colors"><Icons.Trash /></button>
+                <div className="space-y-8 pt-4">
+                  <Input label={t.institution} value={edu.institution} onChange={(v: string) => { let l = [...data.education]; l[index].institution = v; setData({...data, education: l}); }} />
+                  <Input label={t.degree} value={edu.degree} onChange={(v: string) => { let l = [...data.education]; l[index].degree = v; setData({...data, education: l}); }} />
+                  <div className="grid grid-cols-2 gap-8">
+                    <Input label={t.startDate} value={edu.startDate} onChange={(v: string) => { let l = [...data.education]; l[index].startDate = v; setData({...data, education: l}); }} />
+                    <Input label={t.endDate} value={edu.endDate} onChange={(v: string) => { let l = [...data.education]; l[index].endDate = v; setData({...data, education: l}); }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button onClick={() => setData(prev => ({...prev, education: [...prev.education, { id: Date.now().toString(), institution: '', degree: '', startDate: '', endDate: '', description: '' }]}))} className="w-full py-8 border-2 border-dashed border-slate-200 text-slate-400 rounded-[3rem] text-[12px] font-black hover:bg-slate-50 hover:text-slate-900 hover:border-slate-900 transition-all flex items-center justify-center gap-4">
+              <Icons.Plus /> {t.add}
+            </button>
+          </div>
+        )}
+
         {activeTab === 'skills' && (
           <div className="grid grid-cols-1 gap-5">
             {data.skills.map((skill, index) => (
-              <div key={skill.id} className="flex items-center gap-6 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm group hover:border-slate-300 transition-all">
-                <div className="w-2.5 h-2.5 rounded-full bg-slate-200 group-hover:bg-slate-900 transition-colors"></div>
-                <input className="flex-1 bg-transparent border-none outline-none text-[14px] font-black text-slate-700" value={skill.name} placeholder="اسم المهارة" onChange={(e) => { let l = [...data.skills]; l[index].name = e.target.value; setData({...data, skills: l}); }} />
-                <button onClick={() => setData(prev => ({...prev, skills: prev.skills.filter(s => s.id !== skill.id)}))} className="text-slate-200 hover:text-red-600 px-3 transition-colors"><Icons.Trash /></button>
+              <div key={skill.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm group hover:border-slate-300 transition-all flex flex-col gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-2.5 h-2.5 rounded-full bg-slate-900"></div>
+                  <input 
+                    className="flex-1 bg-transparent border-none outline-none text-[14px] font-black text-slate-700" 
+                    value={skill.name} 
+                    placeholder={lang === 'ar' ? 'اسم المهارة' : 'Skill Name'} 
+                    onChange={(e) => { 
+                      let l = [...data.skills]; 
+                      l[index].name = e.target.value; 
+                      setData({...data, skills: l}); 
+                    }} 
+                  />
+                  <button onClick={() => setData(prev => ({...prev, skills: prev.skills.filter(s => s.id !== skill.id)}))} className="text-slate-200 hover:text-red-600 px-3 transition-colors"><Icons.Trash /></button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center px-1">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.skillLevel}</span>
+                    <span className="text-[12px] font-black text-slate-900">{skill.level * 20}%</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="1" 
+                    max="5" 
+                    step="1"
+                    className="w-full h-1.5 bg-slate-100 rounded-full appearance-none cursor-pointer accent-slate-900"
+                    value={skill.level}
+                    onChange={(e) => {
+                      let l = [...data.skills];
+                      l[index].level = parseInt(e.target.value);
+                      setData({...data, skills: l});
+                    }}
+                  />
+                  <div className="flex justify-between px-1">
+                    {[1, 2, 3, 4, 5].map(lvl => (
+                      <div key={lvl} className={`w-1.5 h-1.5 rounded-full transition-colors ${skill.level >= lvl ? 'bg-slate-900' : 'bg-slate-200'}`}></div>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
-            <button onClick={() => setData(prev => ({...prev, skills: [...prev.skills, { id: Date.now().toString(), name: '', level: 3 }]}))} className="w-full py-6 bg-slate-50 text-slate-400 border border-slate-200 rounded-[2rem] text-[11px] font-black hover:bg-slate-100 hover:text-slate-900 transition-all flex items-center justify-center gap-3"><Icons.Plus /> {t.add}</button>
+            <button onClick={() => setData(prev => ({...prev, skills: [...prev.skills, { id: Date.now().toString(), name: '', level: 3 }]}))} className="w-full py-8 bg-slate-50 text-slate-400 border border-slate-200 rounded-[3rem] text-[11px] font-black hover:bg-slate-100 hover:text-slate-900 transition-all flex items-center justify-center gap-3"><Icons.Plus /> {t.add}</button>
           </div>
         )}
       </div>
