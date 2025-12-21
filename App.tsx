@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { CVData, Language, TemplateType } from './types';
-import { SAMPLE_DATA_AR, SAMPLE_DATA_EN } from './constants';
+import { SAMPLE_DATA_AR, SAMPLE_DATA_EN, SPECIALTIES_DATA } from './constants';
 import { translations } from './translations';
 import CVForm from './components/CVForm';
 import CVPreview from './components/CVPreview';
@@ -10,6 +10,7 @@ import SpecialtySelector from './components/SpecialtySelector';
 import ColorPicker from './components/ColorPicker';
 import FontSelector from './components/FontSelector';
 import * as htmlToImage from 'html-to-image';
+import { jsPDF } from 'jspdf';
 
 type ActivePanel = 'content' | 'design' | 'quick';
 
@@ -26,7 +27,7 @@ const App: React.FC = () => {
   const [template, setTemplate] = useState<TemplateType>('modern');
   const [themeColor, setThemeColor] = useState<string>('#0f172a');
   const [fontFamily, setFontFamily] = useState<string>('Cairo');
-  const [data, setData] = useState<CVData>(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
+  const [data, setData] = useState<CVData>(SAMPLE_DATA_AR);
   const [activePanel, setActivePanel] = useState<ActivePanel>('quick');
   const [isCapturing, setIsCapturing] = useState(false);
   const [cvCounter, setCvCounter] = useState<number>(128450);
@@ -34,7 +35,7 @@ const App: React.FC = () => {
 
   const t = translations[lang];
 
-  // Logic for the live counter
+  // Counter logic
   useEffect(() => {
     const savedCounter = localStorage.getItem('sira_cv_counter');
     const baseValue = savedCounter ? parseInt(savedCounter) : 128450;
@@ -42,12 +43,12 @@ const App: React.FC = () => {
 
     const interval = setInterval(() => {
       setCvCounter(prev => {
-        const increment = Math.floor(Math.random() * 3) + 1; // Increment by 1-3
+        const increment = Math.floor(Math.random() * 3) + 1;
         const newValue = prev + increment;
         localStorage.setItem('sira_cv_counter', newValue.toString());
         return newValue;
       });
-    }, 5000); // Update every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -60,15 +61,68 @@ const App: React.FC = () => {
   }, [lang]);
 
   const toggleLanguage = () => {
-    setLang(prev => prev === 'ar' ? 'en' : 'ar');
+    const nextLang = lang === 'ar' ? 'en' : 'ar';
+    
+    // Check if the current data is exactly one of the Arabic samples
+    // If so, switch it to the corresponding English sample automatically
+    const currentIsArSample = Object.values(SPECIALTIES_DATA).some(s => JSON.stringify(s.ar) === JSON.stringify(data));
+    const currentIsEnSample = Object.values(SPECIALTIES_DATA).some(s => JSON.stringify(s.en) === JSON.stringify(data));
+
+    if (nextLang === 'en' && currentIsArSample) {
+      // Find which specialty it was and switch to its English version
+      const entry = Object.entries(SPECIALTIES_DATA).find(([_, val]) => JSON.stringify(val.ar) === JSON.stringify(data));
+      if (entry) setData(entry[1].en);
+    } else if (nextLang === 'ar' && currentIsEnSample) {
+      const entry = Object.entries(SPECIALTIES_DATA).find(([_, val]) => JSON.stringify(val.en) === JSON.stringify(data));
+      if (entry) setData(entry[1].ar);
+    }
+
+    setLang(nextLang);
   };
 
-  const downloadPDF = () => {
-    window.print();
+  const downloadPDF = async () => {
+    if (!previewRef.current || isCapturing) return;
+    setIsCapturing(true);
+    try {
+      const node = previewRef.current.querySelector('.print-container') as HTMLElement;
+      if (!node) throw new Error("Preview container not found");
+      
+      const originalTransform = node.style.transform;
+      const originalBoxShadow = node.style.boxShadow;
+      
+      node.style.transform = 'none';
+      node.style.boxShadow = 'none';
+      
+      const dataUrl = await htmlToImage.toPng(node, { 
+        quality: 1, 
+        pixelRatio: 3,
+        backgroundColor: '#ffffff' 
+      });
+      
+      node.style.transform = originalTransform;
+      node.style.boxShadow = originalBoxShadow;
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`CV-${data.personalInfo.fullName || 'Sira'}.pdf`);
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+      window.print();
+    } finally {
+      setIsCapturing(false);
+    }
   };
 
   const downloadImage = async () => {
-    if (!previewRef.current) return;
+    if (!previewRef.current || isCapturing) return;
     setIsCapturing(true);
     try {
       const node = previewRef.current.querySelector('.print-container') as HTMLElement;
@@ -90,13 +144,12 @@ const App: React.FC = () => {
 
   const handleSpecialtySelect = (specialtyData: CVData) => {
     setData(specialtyData);
-    setActivePanel('content');
+    setActivePanel('design');
   };
 
   return (
     <div className={`min-h-screen bg-[#f1f5f9] flex flex-col overflow-x-hidden ${lang === 'ar' ? 'font-cairo' : 'font-inter'}`}>
       
-      {/* Official Semantic Header */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between z-[100] no-print shadow-sm" role="banner">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-md" style={{ backgroundColor: themeColor }}>س</div>
@@ -115,39 +168,40 @@ const App: React.FC = () => {
             <button 
               onClick={downloadImage}
               disabled={isCapturing}
-              className="px-5 py-2.5 rounded-xl text-[11px] font-black bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition-all flex items-center gap-2"
-              aria-label={t.downloadImage}
+              className={`px-5 py-2.5 rounded-xl text-[11px] font-black bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition-all flex items-center gap-2 ${isCapturing ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <Icons.Image /> <span className="hidden md:inline">{t.downloadImage}</span>
             </button>
             <button 
               onClick={downloadPDF}
-              className="px-6 py-2.5 rounded-xl text-[11px] font-black text-white shadow-xl transition-all flex items-center gap-2 active:scale-95"
+              disabled={isCapturing}
+              className={`px-6 py-2.5 rounded-xl text-[11px] font-black text-white shadow-xl transition-all flex items-center gap-2 active:scale-95 ${isCapturing ? 'opacity-50 cursor-not-allowed' : ''}`}
               style={{ backgroundColor: themeColor }}
-              aria-label={t.downloadPDF}
             >
-              <Icons.Download /> <span>{t.downloadPDF}</span>
+              {isCapturing ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <Icons.Download />
+              )}
+              <span>{isCapturing ? (lang === 'ar' ? 'جاري التحميل...' : 'Downloading...') : t.downloadPDF}</span>
             </button>
           </div>
         </nav>
       </header>
 
-      {/* Main Semantic Workspace */}
       <main className="flex-1 flex flex-col items-center justify-start pt-24 pb-20 px-4" role="main">
-        
         <div className="w-full max-w-[1700px] flex flex-col xl:flex-row items-start justify-center gap-4 xl:gap-6 transition-all">
           
-          {/* SHEET 1: Input Page */}
           <section className="flex-1 flex flex-col items-center gap-4 no-print" id="editor-section">
             <div className="flex items-center gap-3 bg-white px-5 py-2 rounded-full border border-slate-200 shadow-sm self-center">
               <div className="w-2 h-2 rounded-full bg-slate-900"></div>
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">{lang === 'ar' ? 'محرر البيانات الرسمي' : 'Official Data Editor'}</span>
             </div>
             
-            <article className="w-full max-w-[794px] h-[1123px] bg-white rounded-sm shadow-[0_30px_70px_-15px_rgba(0,0,0,0.1)] border border-slate-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-left-8 duration-700">
+            <article className="w-full max-w-[794px] min-h-[1123px] bg-white rounded-sm shadow-[0_30px_70px_-15px_rgba(0,0,0,0.1)] border border-slate-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-left-8 duration-700">
               
               <div className="p-0 bg-white border-b border-slate-100">
-                <nav className="bg-slate-50/80 rounded-b-[1.8rem] rounded-t-none p-2.5 flex items-center gap-2 border-b border-x border-slate-100 mx-5 mb-5" aria-label="أدوات التحرير">
+                <nav className="bg-slate-50/80 rounded-b-[1.8rem] rounded-t-none p-2.5 flex items-center gap-2 border-b border-x border-slate-100 mx-5 mb-5">
                   <button 
                     onClick={() => setActivePanel('quick')}
                     className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-[1.5rem] transition-all duration-300 ${activePanel === 'quick' ? 'bg-amber-500 text-white shadow-[0_8px_20px_-5px_rgba(245,158,11,0.4)]' : 'text-slate-400 hover:text-amber-600 hover:bg-white'}`}
@@ -199,7 +253,6 @@ const App: React.FC = () => {
             </article>
           </section>
 
-          {/* SHEET 2: Output Page */}
           <section className="flex-1 flex flex-col items-center gap-4" id="preview-section">
              <div className="flex items-center gap-4 bg-white px-5 py-2 rounded-full border border-slate-200 shadow-sm self-center no-print">
                <div className="relative">
@@ -222,12 +275,10 @@ const App: React.FC = () => {
                 />
              </div>
           </section>
-
         </div>
       </main>
 
-      {/* Live Counter Section - NEW */}
-      <section className="w-full max-w-7xl mx-auto px-10 mb-20 no-print" aria-label="إحصائيات النجاح">
+      <section className="w-full max-w-7xl mx-auto px-10 mb-20 no-print" aria-label="Success Stats">
          <div className="bg-white/80 backdrop-blur-xl border border-white rounded-[3rem] p-12 flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl shadow-slate-200/50">
             <div className="flex-1 space-y-4 text-center md:text-start">
                <div className="inline-flex items-center gap-3 bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full">
@@ -256,7 +307,6 @@ const App: React.FC = () => {
 
       <div className="fixed inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] z-[-1] opacity-40"></div>
 
-      {/* Official Semantic Footer */}
       <footer className="py-12 border-t border-slate-200 bg-white no-print mt-auto" role="contentinfo">
         <div className="max-w-7xl mx-auto px-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
@@ -264,9 +314,9 @@ const App: React.FC = () => {
             <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">Sira Digital Resume Engine v5.5 Gold</p>
           </div>
           <div className="text-[11px] font-black text-slate-500 flex items-center gap-4">
-            <span>كافة الحقوق محفوظة 2025</span>
+            <span>{lang === 'ar' ? 'كافة الحقوق محفوظة 2025' : 'All Rights Reserved 2025'}</span>
             <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
-            <a href="mailto:adelawad1@gmail.com" className="hover:text-blue-600 transition-colors">تواصل معنا</a>
+            <a href="mailto:adelawad1@gmail.com" className="hover:text-blue-600 transition-colors">{lang === 'ar' ? 'تواصل معنا' : 'Contact Us'}</a>
           </div>
         </div>
       </footer>
