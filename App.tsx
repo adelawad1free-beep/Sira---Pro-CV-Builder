@@ -11,12 +11,15 @@ import ColorPicker from './components/ColorPicker';
 import FontSelector from './components/FontSelector';
 import * as htmlToImage from 'html-to-image';
 
+type ActivePanel = 'content' | 'design' | 'quick';
+
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('ar');
   const [template, setTemplate] = useState<TemplateType>('modern');
   const [themeColor, setThemeColor] = useState<string>('#4f46e5');
   const [fontFamily, setFontFamily] = useState<string>('Cairo');
   const [data, setData] = useState<CVData>(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
+  const [activePanel, setActivePanel] = useState<ActivePanel>('content');
   const [isCapturing, setIsCapturing] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -25,11 +28,6 @@ const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
-    
-    // Switch data if language changes and data is still one of the defaults
-    setData(lang === 'ar' ? SAMPLE_DATA_AR : SAMPLE_DATA_EN);
-    
-    // Auto-switch default font based on language
     if (lang === 'ar') setFontFamily('Cairo');
     else setFontFamily('Inter');
   }, [lang]);
@@ -44,23 +42,14 @@ const App: React.FC = () => {
 
   const downloadImage = async () => {
     if (!previewRef.current) return;
-    
     setIsCapturing(true);
     try {
       const node = previewRef.current.querySelector('.print-container') as HTMLElement;
       if (!node) return;
-
       const originalTransform = node.style.transform;
       node.style.transform = 'none';
-
-      const dataUrl = await htmlToImage.toPng(node, {
-        quality: 1,
-        pixelRatio: 2,
-        backgroundColor: '#ffffff',
-      });
-
+      const dataUrl = await htmlToImage.toPng(node, { quality: 1, pixelRatio: 2, backgroundColor: '#ffffff' });
       node.style.transform = originalTransform;
-
       const link = document.createElement('a');
       link.download = `CV-${data.personalInfo.fullName || 'Sira'}.png`;
       link.href = dataUrl;
@@ -74,119 +63,128 @@ const App: React.FC = () => {
 
   const handleSpecialtySelect = (specialtyData: CVData) => {
     setData(specialtyData);
-    const editor = document.getElementById('cv-editor');
-    if (editor) {
-      editor.scrollIntoView({ behavior: 'smooth' });
-    }
+    setActivePanel('content');
   };
 
   return (
-    <div className={`min-h-screen bg-slate-50/50 pb-20 transition-colors ${lang === 'ar' ? 'font-cairo' : 'font-inter'}`} style={{ fontFamily: fontFamily }}>
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/50 px-6 py-4 no-print shadow-sm">
-        <div className="max-w-[1400px] mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div 
-              className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg transition-colors"
-              style={{ backgroundColor: themeColor }}
-            >س</div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-black text-indigo-950 leading-none">{t.title}</h1>
-              <p className="text-[10px] text-indigo-500 font-black uppercase tracking-[0.2em] mt-1" style={{ color: themeColor }}>{t.subtitle}</p>
-            </div>
+    <div className={`h-screen flex flex-col bg-slate-100/50 overflow-hidden ${lang === 'ar' ? 'font-cairo' : 'font-inter'}`} style={{ fontFamily }}>
+      {/* Top Navbar */}
+      <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between z-50 shadow-sm no-print">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg" style={{ backgroundColor: themeColor }}>س</div>
+          <div className="hidden sm:block leading-tight">
+            <h1 className="text-sm font-black text-slate-900">{t.title}</h1>
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{t.subtitle}</p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={toggleLanguage}
-              className="px-4 py-2 rounded-2xl text-xs font-black text-slate-600 hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200"
-            >
-              {t.language}
-            </button>
-            
-            <div className="w-px h-6 bg-slate-200 mx-1"></div>
-
+        <div className="flex items-center gap-4">
+          <button onClick={toggleLanguage} className="text-xs font-black text-slate-500 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
+            {t.language}
+          </button>
+          <div className="h-6 w-px bg-slate-200"></div>
+          <div className="flex gap-2">
             <button 
               onClick={downloadImage}
               disabled={isCapturing}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 transition-all disabled:opacity-50"
+              className="px-4 py-2 rounded-xl text-xs font-black bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 00-2 2z" /></svg>
-              {isCapturing ? '...' : t.downloadImage}
+              🖼️ <span className="hidden md:inline">{t.downloadImage}</span>
             </button>
-
             <button 
               onClick={downloadPDF}
-              className="px-6 py-2.5 rounded-2xl text-xs font-black text-white shadow-xl transition-all active:scale-95 flex items-center gap-2"
-              style={{ backgroundColor: themeColor, boxShadow: `0 10px 15px -3px ${themeColor}44` }}
+              className="px-5 py-2 rounded-xl text-xs font-black text-white shadow-lg transition-all active:scale-95 flex items-center gap-2"
+              style={{ backgroundColor: themeColor }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-              {t.downloadPDF}
+              📄 <span>{t.downloadPDF}</span>
             </button>
           </div>
         </div>
-      </nav>
+      </header>
 
-      <main className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-16 items-start">
-          {/* Left Column: Editor */}
-          <div className="space-y-8" id="cv-editor">
-            <div className="flex justify-between items-center">
-              <div className="space-y-1">
-                 <h2 className="text-2xl font-black text-slate-900">صمّم هويتك المهنية</h2>
-                 <p className="text-slate-500 text-sm font-medium">تحكم بالألوان، القوالب، والبيانات لخلق انطباع لا ينسى.</p>
+      {/* Main Workspace */}
+      <div className="flex-1 flex overflow-hidden relative">
+        
+        {/* Right Sidebar: Controls */}
+        <aside className="w-full md:w-[420px] bg-white border-x border-slate-200 flex flex-col z-40 no-print shadow-2xl md:shadow-none">
+          {/* Sidebar Tabs */}
+          <div className="flex border-b bg-slate-50/50 p-1">
+            <button 
+              onClick={() => setActivePanel('content')}
+              className={`flex-1 py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-2 ${activePanel === 'content' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              📝 <span>{lang === 'ar' ? 'البيانات' : 'Content'}</span>
+            </button>
+            <button 
+              onClick={() => setActivePanel('design')}
+              className={`flex-1 py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-2 ${activePanel === 'design' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              🎨 <span>{lang === 'ar' ? 'التصميم' : 'Design'}</span>
+            </button>
+            <button 
+              onClick={() => setActivePanel('quick')}
+              className={`flex-1 py-3 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-2 ${activePanel === 'quick' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              ⚡ <span>{lang === 'ar' ? 'تعبئة' : 'Quick'}</span>
+            </button>
+          </div>
+
+          {/* Panel Content */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar">
+            {activePanel === 'content' && (
+              <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+                <CVForm data={data} setData={setData} lang={lang} />
               </div>
-            </div>
-            
-            <ColorPicker color={themeColor} onChange={setThemeColor} lang={lang} />
-            <FontSelector currentFont={fontFamily} onChange={setFontFamily} lang={lang} />
-            <SpecialtySelector lang={lang} onSelect={handleSpecialtySelect} themeColor={themeColor} />
-            <TemplateSelector current={template} onChange={setTemplate} lang={lang} />
-            <CVForm data={data} setData={setData} lang={lang} />
+            )}
+            {activePanel === 'design' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300 pb-10">
+                <TemplateSelector current={template} onChange={setTemplate} lang={lang} />
+                <ColorPicker color={themeColor} onChange={setThemeColor} lang={lang} />
+                <FontSelector currentFont={fontFamily} onChange={setFontFamily} lang={lang} />
+              </div>
+            )}
+            {activePanel === 'quick' && (
+              <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+                <SpecialtySelector lang={lang} onSelect={handleSpecialtySelect} themeColor={themeColor} />
+              </div>
+            )}
           </div>
+        </aside>
 
-          {/* Right Column: Preview */}
-          <div className="sticky top-32 flex justify-center no-print" ref={previewRef}>
-            <div className="scale-[0.55] lg:scale-[0.85] xl:scale-[0.65] 2xl:scale-[0.9] transition-transform origin-top">
-               <div className="relative group">
-                 <div 
-                   className="absolute -inset-10 rounded-[4rem] blur-3xl opacity-20 transition-all duration-1000"
-                   style={{ backgroundColor: themeColor }}
-                 ></div>
-                 <CVPreview 
-                    data={data} 
-                    lang={lang} 
-                    template={template} 
-                    themeColor={themeColor} 
-                    fontFamily={fontFamily}
-                 />
-               </div>
+        {/* Center Canvas: Preview */}
+        <main className="flex-1 overflow-auto bg-slate-200/50 flex justify-center py-12 px-4 scroll-smooth no-scrollbar relative">
+          <div 
+            ref={previewRef}
+            className="transition-all duration-500 ease-out transform origin-top scale-[0.5] sm:scale-[0.7] md:scale-[0.6] lg:scale-[0.8] xl:scale-[0.9] 2xl:scale-[1.0]"
+          >
+            <div className="relative group">
+              {/* Soft Ambient Glow */}
+              <div 
+                className="absolute -inset-10 rounded-[4rem] blur-[100px] opacity-10 transition-all duration-1000"
+                style={{ backgroundColor: themeColor }}
+              ></div>
+              <CVPreview 
+                data={data} 
+                lang={lang} 
+                template={template} 
+                themeColor={themeColor} 
+                fontFamily={fontFamily}
+              />
             </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      {/* Mobile Action Buttons */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 md:hidden no-print z-50 flex gap-3">
-         <button 
-          onClick={downloadImage}
-          disabled={isCapturing}
-          className="bg-white text-slate-800 px-6 py-4 rounded-full font-black shadow-2xl flex items-center gap-2 active:scale-90 transition-transform border border-slate-200"
-         >
-           🖼️
-         </button>
-         <button 
-          onClick={downloadPDF}
-          className="text-white px-10 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 active:scale-90 transition-transform"
-          style={{ backgroundColor: themeColor }}
-         >
-           {t.downloadPDF} 📄
-         </button>
       </div>
       
-      <footer className="mt-12 py-12 border-t border-slate-100 text-center no-print">
-        <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.3em]">Premium Design by Sira Team</p>
-      </footer>
+      {/* Mobile Sticky CTA */}
+      <div className="md:hidden fixed bottom-6 right-6 left-6 z-50 flex gap-2 no-print">
+          <button 
+            onClick={() => setActivePanel(activePanel === 'content' ? 'design' : 'content')}
+            className="flex-1 bg-slate-900 text-white py-4 rounded-2xl font-black text-xs shadow-2xl flex items-center justify-center gap-2"
+          >
+            {activePanel === 'content' ? '🎨 تخصيص المظهر' : '📝 تعديل البيانات'}
+          </button>
+      </div>
     </div>
   );
 };

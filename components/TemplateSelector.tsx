@@ -11,33 +11,34 @@ interface Props {
 
 const TemplateSelector: React.FC<Props> = ({ current, onChange, lang }) => {
   const t = translations[lang];
-  const templates: { id: TemplateType; label: string }[] = [
-    { id: 'modern', label: t.modern },
-    { id: 'creative', label: t.creative },
-    { id: 'executive', label: t.executive },
-    { id: 'geometric', label: t.geometric },
-    { id: 'sidebar', label: t.sidebar },
-    { id: 'professional', label: t.professional },
+  const templates: { id: TemplateType; label: string; icon: string }[] = [
+    { id: 'modern', label: t.modern, icon: '📱' },
+    { id: 'creative', label: t.creative, icon: '🎨' },
+    { id: 'executive', label: t.executive, icon: '👔' },
+    { id: 'geometric', label: t.geometric, icon: '📐' },
+    { id: 'sidebar', label: t.sidebar, icon: '📑' },
+    { id: 'professional', label: t.professional, icon: '🏢' },
   ];
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 no-print space-y-4">
-      <div className="flex items-center gap-3 mb-2">
+    <div className="bg-white rounded-3xl p-6 border border-slate-100 space-y-4">
+      <div className="flex items-center gap-3">
          <span className="text-xl">🖼️</span>
-         <h3 className="font-black text-slate-800 text-sm uppercase tracking-wide">{t.template}</h3>
+         <h3 className="font-black text-slate-800 text-xs uppercase tracking-wide">{t.template}</h3>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-2">
         {templates.map((tmp) => (
           <button
             key={tmp.id}
             onClick={() => onChange(tmp.id)}
-            className={`px-4 py-3 rounded-2xl text-xs font-black transition-all border text-center ${
+            className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border text-center ${
               current === tmp.id 
                 ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' 
-                : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-300'
+                : 'border-slate-50 bg-slate-50/50 text-slate-500 hover:border-slate-200'
             }`}
           >
-            {tmp.label}
+            <span className="text-xl">{tmp.icon}</span>
+            <span className="text-[10px] font-black">{tmp.label}</span>
           </button>
         ))}
       </div>

@@ -12,6 +12,7 @@ interface Props {
 
 const SpecialtySelector: React.FC<Props> = ({ lang, onSelect, themeColor }) => {
   const t = translations[lang];
+  const isRtl = lang === 'ar';
 
   const specialties = [
     { id: 'software', emoji: '💻' },
@@ -27,31 +28,34 @@ const SpecialtySelector: React.FC<Props> = ({ lang, onSelect, themeColor }) => {
   ];
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 no-print space-y-4">
-      <div className="flex items-center justify-between">
-         <div className="flex items-center gap-2">
-            <span className="text-lg">⚡</span>
-            <h3 className="font-black text-slate-800 text-sm uppercase tracking-wide">{t.chooseSpecialty}</h3>
-         </div>
-      </div>
+    <div className="space-y-6">
+      <div className="bg-white rounded-3xl p-6 border border-slate-100 space-y-4">
+        <div className="flex items-center gap-3">
+           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shadow-sm" style={{ backgroundColor: `${themeColor}15`, color: themeColor }}>⚡</div>
+           <h3 className="font-black text-slate-800 text-xs uppercase tracking-wider">{t.chooseSpecialty}</h3>
+        </div>
 
-      <div className="flex flex-wrap gap-2 overflow-x-auto pb-2 no-scrollbar">
-        {specialties.map((spec) => (
-          <button
-            key={spec.id}
-            onClick={() => onSelect(SPECIALTIES_DATA[spec.id][lang])}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-100 bg-slate-50 hover:bg-white transition-all duration-300 active:scale-95 whitespace-nowrap group hover:shadow-md"
-            style={{ 
-              borderLeftWidth: '4px',
-              borderLeftColor: themeColor 
-            }}
-          >
-            <span className="text-base group-hover:scale-125 transition-transform">{spec.emoji}</span>
-            <span className="text-xs font-black text-slate-600 group-hover:text-slate-900">
-              {(t.specialties as any)[spec.id]}
-            </span>
-          </button>
-        ))}
+        <div className="grid grid-cols-2 gap-2">
+          {specialties.map((spec) => (
+            <button
+              key={spec.id}
+              onClick={() => onSelect(SPECIALTIES_DATA[spec.id][lang])}
+              className="flex items-center gap-3 p-3 rounded-2xl border border-slate-50 bg-slate-50/50 hover:bg-white hover:shadow-md hover:border-indigo-100 transition-all group"
+            >
+              <span className="text-xl group-hover:scale-125 transition-transform">{spec.emoji}</span>
+              <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-900 leading-tight truncate">
+                {(t.specialties as any)[spec.id]}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3">
+         <span className="text-xl">💡</span>
+         <p className="text-[10px] text-amber-800 font-bold leading-relaxed">
+           {isRtl ? 'اختيار تخصص سيقوم بتبديل بياناتك الحالية ببيانات وهمية احترافية لهذا التخصص.' : 'Selecting a specialty will replace your current data with professional sample data.'}
+         </p>
       </div>
     </div>
   );
